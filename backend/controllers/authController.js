@@ -20,7 +20,8 @@ export const register = async (req, res) => {
 
     res.json({ msg: "Registered successfully", user });
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    console.log(err);
+    res.status(500).json({ msg: "Server error from backend" });
   }
 };
 
@@ -29,11 +30,11 @@ export const login = async (req, res) => {
   try {
     // 1. check if user registered
     const user = await User.findOne({ username });
-    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+    if (!user) return res.status(400).json({ msg: "User does not exist" });
 
     // 2. check if pwd match
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ msg: "Password does not match" });
 
     // 3. create JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
