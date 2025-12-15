@@ -3,9 +3,30 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "Alice",
+  "username": "Alicee",
   "password": "mypassword123"
 }
+
+# HTTP/1.1 200 OK
+# X-Powered-By: Express
+# Access-Control-Allow-Origin: http://localhost:5173
+# Vary: Origin
+# Access-Control-Allow-Credentials: true
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 177
+# ETag: W/"b1-NgS/RhEEaXPLR+OOQJQ2QF2AzQ4"
+# Date: Mon, 15 Dec 2025 14:00:53 GMT
+# Connection: close
+
+# {
+#   "msg": "Registered successfully",
+#   "user": {
+#     "username": "Alicee",
+#     "password": "$2b$10$l69AQlDvnMlUNZ9RnF1RR.5FhvIivboNM2jJQkSFVVEu7EhS9hdZe",
+#     "_id": "69401495be7dd351f18b96c4",
+#     "__v": 0
+#   }
+# }
 
 
 ### Login user
@@ -13,6 +34,49 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "Alice",
+  "username": "Alicee",
   "password": "mypassword123"
 }
+
+# HTTP/1.1 200 OK
+# X-Powered-By: Express
+# Access-Control-Allow-Origin: http://localhost:5173
+# Vary: Origin
+# Access-Control-Allow-Credentials: true
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 345
+# ETag: W/"159-kjJpgZwXnGfpWNwB12TISmRpvug"
+# Date: Mon, 15 Dec 2025 14:01:55 GMT
+# Connection: close
+
+# {
+#   "msg": "Logged in",
+#   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDAxNDk1YmU3ZGQzNTFmMThiOTZjNCIsImlhdCI6MTc2NTgwNzMxNSwiZXhwIjoxNzY1ODkzNzE1fQ.q70Z8WaK3E4qBD-kf1lc34Y2ltxFqR7A_y-JCshLPxY",
+#   "user": {
+#     "_id": "69401495be7dd351f18b96c4",
+#     "username": "Alicee",
+#     "password": "$2b$10$l69AQlDvnMlUNZ9RnF1RR.5FhvIivboNM2jJQkSFVVEu7EhS9hdZe",
+#     "__v": 0
+#   }
+# }
+
+###
+GET http://localhost:5000/api/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDAxNDk1YmU3ZGQzNTFmMThiOTZjNCIsImlhdCI6MTc2NTgwNzMxNSwiZXhwIjoxNzY1ODkzNzE1fQ.q70Z8WaK3E4qBD-kf1lc34Y2ltxFqR7A_y-JCshLPxY
+
+# HTTP/1.1 200 OK
+# X-Powered-By: Express
+# Access-Control-Allow-Origin: http://localhost:5173
+# Vary: Origin
+# Access-Control-Allow-Credentials: true
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 79
+# ETag: W/"4f-qIP5XkXhVVN1vojGV5hfmc8wotk"
+# Date: Mon, 15 Dec 2025 14:10:11 GMT
+# Connection: close
+
+# {
+#   "msg": "Profile available",
+#   "id": "69401495be7dd351f18b96c4",
+#   "username": "Alicee"
+# }
