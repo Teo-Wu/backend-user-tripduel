@@ -11,12 +11,6 @@ This backend allows **user registration and login** using:
 - bcryptjs for hashing passwords
 - JSON Web Tokens (JWT) for authentication
 
-The frontend sends a **JWT access token** with every request to protected backend routes.
-
-> ⚠️ Security note: For your JWT secret, please contact **yutong.wu@mailbox.tu-dresden.de**.  
-> Each teammate should create their own `.env` file and not commit secrets.
-> more details please look at JWT_TOKEN.md
-
 ---
 
 ## 🛠 Prerequisites
@@ -57,7 +51,7 @@ mongodb+srv://alice:mypassword123@cluster0.mongodb.net/userDB?retryWrites=true&w
 
 ```env
 MONGO_URI=<your MongoDB connection string>
-JWT_SECRET=<random_secret_string>
+JWT_SECRET=tripduel
 PORT=5000
 ```
 

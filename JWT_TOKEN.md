@@ -26,13 +26,10 @@ Once you extract `userId`, you can:
 Create a `.env` file in your backend repo:
 
 ```env
-JWT_SECRET=********
+JWT_SECRET=tripduel
 ````
 
 * we should have the **same** JWT_SECRET value
-* **Do NOT commit this file** to Git.
->  For security reasons, I will not include the JWT secret in this repo.  
-> Please contact me at **yutong.wu@mailbox.tu-dresden.de** to get the secret 
 ---
 
 ## Step 2: Add JWT Auth Middleware
