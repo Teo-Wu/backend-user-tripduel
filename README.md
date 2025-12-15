@@ -1,11 +1,21 @@
+
+# README.md
+
+
 # User Management Backend
 
 This backend allows **user registration and login** using:
 
-* Node.js + Express
-* MongoDB (Atlas)
-* bcryptjs for hashing passwords
-* JSON Web Tokens (JWT) for authentication
+- Node.js + Express
+- MongoDB (Atlas)
+- bcryptjs for hashing passwords
+- JSON Web Tokens (JWT) for authentication
+
+The frontend sends a **JWT access token** with every request to protected backend routes.
+
+> ⚠️ Security note: For your JWT secret, please contact **yutong.wu@mailbox.tu-dresden.de**.  
+> Each teammate should create their own `.env` file and not commit secrets.
+> more details please look at JWT_TOKEN.md
 
 ---
 
@@ -13,20 +23,19 @@ This backend allows **user registration and login** using:
 
 Before starting, make sure you have:
 
-1. **Node.js v24+** installed
-2. **MongoDB Atlas account** (free is fine)
-3. **VSCode REST Client** or **Postman** to test APIs
+1. **Node.js v24+** installed  
+2. **MongoDB Atlas account** (free cluster is fine)  
+3. **VSCode REST Client** or **Postman** to test APIs  
 
 ---
 
 ## 🏗 Setup Instructions
 
 ### 1. Clone the project
-
 ```bash
 git clone git@gitlab.rn.inf.tu-dresden.de:scc/scc-gruppe-08/tripduel/user.git
 cd backend
-```
+````
 
 ### 2. Install dependencies
 
@@ -36,61 +45,45 @@ npm install
 
 ### 3. Create MongoDB Atlas database
 
-1. Go to [MongoDB Atlas](https://cloud.mongodb.com/) and **login**
-2. Click **Build a Cluster** (free cluster is fine)
-3. After the cluster is ready, click **Connect → Connect your application(Drivers)**
-4. Copy the connection string. It looks like:
-
-```
-mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
-```
-
-5. Replace `<username>`, `<password>`, with your info. Replace `<dbname>` with a name that you want to give to your database. This database will be automatically created if it's not there yet.
-
-Example:
+1. Login to [MongoDB Atlas](https://cloud.mongodb.com/)
+2. Build a free cluster
+3. Copy your connection string, e.g.:
 
 ```
 mongodb+srv://alice:mypassword123@cluster0.mongodb.net/userDB?retryWrites=true&w=majority
 ```
 
----
-
-### 4. Create a `.env` file in `backend/`
+### 4. Create a `.env` file
 
 ```env
-MONGO_URI=<your MongoDB Atlas connection string>
-JWT_SECRET=your_jwt_secret_key(this is just a random string)
+MONGO_URI=<your MongoDB connection string>
+JWT_SECRET=<random_secret_string>
 PORT=5000
 ```
 
-> ⚠️ Every teammate should create their own `.env` file with their secrets.
-
----
-
-### 5. Run the server
+### 5. Start the server
 
 ```bash
 node server.js
 ```
 
-* Should see:
+✅ Server runs at `http://localhost:5000`
+Expected console output:
 
 ```
 Server running on port 5000
 MongoDB connected
 ```
 
-* Server is now running at: `http://localhost:5000`
-
 ---
 
 ## 🌐 API Endpoints
 
 ### 1. Register User
-> ⚠️ username is set to be unique
 
-* **POST** `/api/auth/register`
-* **Body (JSON)**
+**POST** `/api/auth/register`
+
+**Request Body**
 
 ```json
 {
@@ -99,7 +92,7 @@ MongoDB connected
 }
 ```
 
-* **Response**
+**Response**
 
 ```json
 {
@@ -113,14 +106,15 @@ MongoDB connected
 }
 ```
 
-> Password is **hashed** before storing, so it is secure.
+> stateless: Password is hashed using bcrypt before storing. Backend never stores or knows the original password.
 
 ---
 
 ### 2. Login User
 
-* **POST** `/api/auth/login`
-* **Body (JSON)**
+**POST** `/api/auth/login`
+
+**Request Body**
 
 ```json
 {
@@ -129,17 +123,22 @@ MongoDB connected
 }
 ```
 
-* **Response**
+**Response**
 
 ```json
 {
   "msg": "Logged in",
   "token": "<JWT token>",
-  "user": { ...user info... }
+  "user": {
+    "_id": "user_id_here",
+    "username": "Alice",
+    "password": "<hashed password>",
+    "__v": 0
+  }
 }
 ```
 
-> The `token` is a **JWT token**. You can use it to access protected APIs by sending it in the header:
+> The returned `token` must be sent in the `Authorization` header for protected routes:
 
 ```
 Authorization: Bearer <token>
@@ -147,20 +146,68 @@ Authorization: Bearer <token>
 
 ---
 
-## 🔑 What is JWT?
+### 3. Get Profile (Protected)
 
-* JWT = JSON Web Token
-* It is a **digital key** that proves you are logged in
-* Contains your **user ID** and **expires in 1 day**
-* The server checks this key on every request to protected routes
-* Without JWT, the server would have to check username/password every time
+**GET** `/api/users/profile`
+**Reponse**
+```
+GET http://localhost:5000/api/users/profile
+Authorization: Bearer <JWT token
+```
+
+**Response (dummy example)**
+
+```json
+{
+  "msg": "Profile available",
+  "_id": "user_id_here",
+  "username": "Alice", 
+}
+```
+
+> Only accessible with a valid JWT. Password is never stored or returned in plaintext.
 
 ---
 
-## 🧪 How to test APIs
+## 🔑 JWT Overview
 
-* Use **VSCode REST Client** or **Postman**
-* Example using REST Client:
+* JSON Web Token (JWT) is a **digital key** proving the user is logged in
+* Contains `userId` and expiration (`1 day`)
+* Backend verifies token on every protected route
+* Backend does **not store session state**, authentication is stateless
+
+---
+
+## 📂 Backend Folder Structure
+
+```
+backend/
+├── config/          # MongoDB connection logic
+├── controllers/     # Endpoint logic (register, login, profile)
+├── middleware/      # JWT authentication middleware
+├── models/          # MongoDB schemas (User model)
+├── routes/          # Express routes (authRoutes.js, userRoutes.js)
+├── server.js        # Entry point of backend
+├── package.json
+└── .env             # Environment variables (local, not pushed)
+```
+
+### Key Files
+
+* `models/User.js` → defines user schema
+* `controllers/userController.js` → register/login/profile logic
+* `middleware/authMiddleware.js` → validates JWT
+* `routes/authRoutes.js` → `/register`, `/login` endpoints
+* `routes/userRoutes.js` → `/profile` endpoint
+* `server.js` → connects MongoDB and sets up routes
+
+---
+
+## 🧪 How to Test APIs
+
+Use **VSCode REST Client** or **Postman**:
+
+**Register Example**
 
 ```
 POST http://localhost:5000/api/auth/register
@@ -172,22 +219,22 @@ Content-Type: application/json
 }
 ```
 
----
+**Login Example**
 
-## 🗄️ Check your database
+```
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
 
-1. Go to MongoDB Atlas
-2. Click **Clusters → Collections**
-3. Open your database (`userDB`) to see users
+{
+  "username": "Alice",
+  "password": "mypassword123"
+}
+```
 
-> You can also use **MongoDB Compass** (GUI) to see data.
+**Get Profile Example**
 
----
+```
+GET http://localhost:5000/api/users/profile
+Authorization: Bearer <JWT token>
+```
 
-## ✅ Notes
-
-* username is unique
-* Keep your **JWT_SECRET** safe
-* Passwords are **never stored as plain text**
-* Token expires in **1 day** for security
-* Each teammate needs their own `.env` file
