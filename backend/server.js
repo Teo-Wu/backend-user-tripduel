@@ -11,8 +11,9 @@ connectDB();
 const app = express();
 
 // CORS for frontend (React on port 5173)
-app.use(cors({ 
-  origin: "http://localhost:5173",
+app.use(cors({
+  origin: "https://Teo-Wu.github.io", 
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
