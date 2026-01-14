@@ -1,0 +1,80 @@
+### Register user
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "Alice",
+  "password": "123"
+}
+
+# HTTP/1.1 200 OK
+# X-Powered-By: Express
+# Access-Control-Allow-Origin: http://localhost:5173
+# Vary: Origin
+# Access-Control-Allow-Credentials: true
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 176
+# ETag: W/"b0-BVZl4t/2T/DoesVbe9RZKo+RAPc"
+# Date: Tue, 16 Dec 2025 05:18:25 GMT
+# Connection: close
+
+# {
+#   "msg": "Registered successfully",
+#   "user": {
+#     "username": "Alice",
+#     "password": "$2b$10$jbPNbbRHkJ8am/XSgBpPS.W7ZAaXe8fqw4c1TezMxlubVQuB2MOvW",
+#     "_id": "6940eba12f6f0ff8464406d7",
+#     "__v": 0
+#   }
+# }
+
+# HTTP/1.1 400 Bad Request
+# {
+#   "msg": "User already exists"
+# }
+
+### Login user
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "Alice",
+  "password": "123"
+}
+
+# HTTP/1.1 400 Bad Request
+# {
+#   "msg": "User does not exist"
+# }
+
+# HTTP/1.1 200 OK
+# {
+#   "msg": "Logged in",
+#   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDBlYmExMmY2ZjBmZjg0NjQ0MDZkNyIsImlhdCI6MTc2NTg2MjUzNiwiZXhwIjoxNzY1OTQ4OTM2fQ.5-ZGFoSyLQ0tgIvHDX6eSBRmypTsrtMYuYYNhSmOhGY",
+#   "user": {
+#     "_id": "6940eba12f6f0ff8464406d7",
+#     "username": "Alice",
+#     "password": "$2b$10$jbPNbbRHkJ8am/XSgBpPS.W7ZAaXe8fqw4c1TezMxlubVQuB2MOvW",
+#     "__v": 0
+#   }
+# }
+
+###
+GET http://localhost:5000/api/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDBlZDBlMmY2ZjBmZjg0NjQ0MDZkZSIsImlhdCI6MTc2NTg2Mjg3OSwiZXhwIjoxNzY1OTQ5Mjc5fQ.-Ybr7ck8ZwXKITel46V1Y2Fw2ph_ens14mYdooRLbe0
+# HTTP/1.1 200 OK
+# X-Powered-By: Express
+# Access-Control-Allow-Origin: http://localhost:5173
+# Vary: Origin
+# Access-Control-Allow-Credentials: true
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 79
+# ETag: W/"4f-qIP5XkXhVVN1vojGV5hfmc8wotk"
+# Date: Mon, 15 Dec 2025 14:10:11 GMT
+# Connection: close
+
+# {
+#   "msg": "Profile available",
+#   "id": "69401495be7dd351f18b96c4",
+#   "username": "Alicee"
+# }
