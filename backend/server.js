@@ -12,7 +12,10 @@ const app = express();
 
 // CORS for frontend (React on port 5173)
 app.use(cors({
-  origin: "https://Teo-Wu.github.io", 
+    origin: [
+    "https://teo-wu.github.io",
+    "http://localhost:5173", // Vite
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
